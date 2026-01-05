@@ -79,7 +79,7 @@ const AboutSection = () => {
                 <h2 className="about-title text-4xl font-bold mb-8 text-neon-green border-b border-white/10 pb-4 text-center [text-shadow:0_0_15px_rgba(0,255,0,0.5)]">About Me</h2>
                 <div className="grid md:grid-cols-2 gap-12">
                     <div className="about-summary">
-                        <h3 className="text-2xl font-semibold mb-4 text-white/90">Summary</h3>
+                        <h3 className="text-2xl font-semibold mb-4 text-neon-green/90 [text-shadow:0_0_10px_rgba(0,255,0,0.3)]">Summary</h3>
                         <p className="text-lg text-white/70 leading-relaxed">
                             Results-driven Frontend Engineer with 1 year of experience specializing in modern web development technologies like React, JavaScript, TypeScript, Bootstrap, Tailwind, SASS, Data Visualization, and Next.js.
                         </p>
@@ -89,7 +89,7 @@ const AboutSection = () => {
                     </div>
                     <div className="about-right-col">
                         <div className="experience-block">
-                            <h3 className="text-2xl font-semibold mb-4 text-white/90">Experience</h3>
+                            <h3 className="text-2xl font-semibold mb-4 text-neon-green/90 [text-shadow:0_0_10px_rgba(0,255,0,0.3)]">Experience</h3>
                             <div className="border-l-2 border-white/20 pl-6 py-2">
                                 <h4 className="text-xl font-bold text-white">Pakipreneurs</h4>
                                 <p className="text-white/60 mb-2">Frontend Web Developer | April 2025 - Present</p>
@@ -99,7 +99,7 @@ const AboutSection = () => {
                             </div>
                         </div>
                         <div className="education-block mt-8">
-                            <h3 className="text-2xl font-semibold mb-4 text-white/90">Education</h3>
+                            <h3 className="text-2xl font-semibold mb-4 text-neon-green/90 [text-shadow:0_0_10px_rgba(0,255,0,0.3)]">Education</h3>
                             <div className="border-l-2 border-white/20 pl-6 py-2">
                                 <h4 className="text-xl font-bold text-white">Hamdard University</h4>
                                 <p className="text-white/60">Bachelor of Science - BS, Computer Science</p>

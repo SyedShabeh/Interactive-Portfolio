@@ -324,7 +324,7 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
           }
           li.active {
             color: white;
-            text-shadow: none;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
           }
           li.active::after {
             opacity: 1;

@@ -11,7 +11,7 @@ const ContactSection = () => {
                 <div className="grid md:grid-cols-2 gap-12">
                     {/* Contact Info */}
                     <div className="space-y-8">
-                        <h3 className="text-2xl font-semibold text-white/90 mb-6">Get in Touch</h3>
+                        <h3 className="text-2xl font-semibold text-neon-green/90 mb-6 [text-shadow:0_0_10px_rgba(0,255,0,0.3)]">Get in Touch</h3>
                         <p className="text-white/60 text-lg leading-relaxed">
                             I'm always open to discussing new projects, creative ideas or opportunities to be part of your visions.
                         </p>

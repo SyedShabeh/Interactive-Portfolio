@@ -68,7 +68,7 @@ const ContactSection = () => {
                                 <input
                                     type="text"
                                     id="name"
-                                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors"
+                                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-darkgreen transition-colors"
                                     placeholder="Your Name"
                                 />
                             </div>
@@ -77,7 +77,7 @@ const ContactSection = () => {
                                 <input
                                     type="email"
                                     id="email"
-                                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors"
+                                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-darkgreen transition-colors"
                                     placeholder="your@email.com"
                                 />
                             </div>

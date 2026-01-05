@@ -12,8 +12,8 @@ const projects = [
             { name: "Supabase", color: "#22C55E" },
             { name: "npm", color: "#F97316" } // Orange
         ],
-        link: "#",
-        image: "https://images.unsplash.com/photo-1531746790731-6c087fecd05a?q=80&w=800&auto=format&fit=crop"
+        link: "https://sigmabot.vercel.app",
+        image: "https://images.unsplash.com/photo-1593508512255-86ab42a8e620?q=80&w=800&auto=format&fit=crop"
     },
     {
         title: "Deal Desk",
@@ -24,7 +24,7 @@ const projects = [
             { name: "Supabase", color: "#22C55E" }, // Green
             { name: "pnpm", color: "#EAB308" } // Yellow
         ],
-        link: "#",
+        link: "https://dealdesk.pk",
         image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop"
     },
     {
@@ -35,7 +35,7 @@ const projects = [
             { name: "GSAP", color: "#88CE02" },
             { name: "Three.js", color: "#FFFFFF" }
         ],
-        link: "#",
+        link: "https://syedshabeh-dev.vercel.app",
         image: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=800&auto=format&fit=crop"
     },
     {
@@ -47,7 +47,7 @@ const projects = [
             { name: "Supabase", color: "#22C55E" },
             { name: "npm", color: "#F97316" }
         ],
-        link: "#",
+        link: "https://shabeh-e-commerce.vercel.app/",
         image: "https://images.unsplash.com/photo-1472851294608-062f824d29cc?q=80&w=800&auto=format&fit=crop"
     },
 ];
@@ -63,7 +63,7 @@ const ProjectsSection = () => {
 
             <div className="absolute inset-0 top-32">
                 <CircularGallery
-                    key={`gallery-${projects.length}-${projects[0].title}`}
+                    key={`gallery-${projects.length}-${projects[0].title}-${projects[0].link}`}
                     items={projects}
                     bend={3}
                     textColor="#ffffff"

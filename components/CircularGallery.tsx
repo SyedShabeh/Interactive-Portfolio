@@ -584,6 +584,19 @@ class App {
         window.addEventListener('touchstart', this.boundOnTouchDown);
         window.addEventListener('touchmove', this.boundOnTouchMove);
         window.addEventListener('touchend', this.boundOnTouchUp);
+
+        // Add cursor pointer logic
+        this.container.addEventListener('mousemove', (e) => {
+            const x = e.clientX;
+            const normX = (x / this.screen.width) * 2 - 1;
+            const viewportX = (normX * this.viewport.width) / 2;
+            const isOverCard = this.medias.some(media => {
+                const halfWidth = media.plane.scale.x / 2;
+                const mediaX = media.plane.position.x;
+                return viewportX >= mediaX - halfWidth && viewportX <= mediaX + halfWidth;
+            });
+            this.container.style.cursor = isOverCard ? 'pointer' : 'grab';
+        });
     }
 
     destroy() {

@@ -6,7 +6,7 @@ const ContactSection = () => {
     return (
         <section id="contact" className="py-20 px-6 relative z-10">
             <div className="max-w-5xl mx-auto">
-                <h2 className="text-4xl font-bold mb-12 text-white border-b border-white/10 pb-4 text-center">Contact Me</h2>
+                <h2 className="text-4xl font-bold mb-12 text-darkgreen border-b border-white/10 pb-4 text-center">Contact Me</h2>
 
                 <div className="grid md:grid-cols-2 gap-12">
                     {/* Contact Info */}
@@ -86,13 +86,13 @@ const ContactSection = () => {
                                 <textarea
                                     id="message"
                                     rows={4}
-                                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors resize-none"
+                                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-darkgreen transition-colors resize-none"
                                     placeholder="Your Message"
                                 ></textarea>
                             </div>
                             <button
                                 type="submit"
-                                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 group"
+                                className="w-full bg-darkgreen hover:bg-green-900 text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 group"
                             >
                                 Send Message
                                 <Send className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />

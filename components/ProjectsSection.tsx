@@ -57,7 +57,7 @@ const ProjectsSection = () => {
         <section id="projects" className="h-screen w-full relative z-10 overflow-hidden bg-black">
             <div className="absolute top-12 left-0 right-0 z-20 pointer-events-none px-6">
                 <div className="max-w-4xl mx-auto">
-                    <h2 className="text-4xl font-bold mb-8 text-white border-b border-white/10 pb-4 text-center">Featured Projects</h2>
+                    <h2 className="text-4xl font-bold mb-8 text-darkgreen border-b border-white/10 pb-4 text-center">Featured Projects</h2>
                 </div>
             </div>
 

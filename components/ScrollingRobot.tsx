@@ -70,7 +70,7 @@ const ScrollingRobot = () => {
             style={{
                 left: "-20%",
                 top: "20%",
-                filter: "drop-shadow(0 0 15px rgba(96, 165, 250, 0.4))"
+                filter: "drop-shadow(0 0 15px rgba(0, 100, 0, 0.6))"
             }}
         >
             <Image

@@ -16,15 +16,6 @@ function lerp(p1: number, p2: number, t: number): number {
     return p1 + (p2 - p1) * t;
 }
 
-function autoBind(instance: any): void {
-    const proto = Object.getPrototypeOf(instance);
-    Object.getOwnPropertyNames(proto).forEach(key => {
-        if (key !== 'constructor' && typeof instance[key] === 'function') {
-            instance[key] = instance[key].bind(instance);
-        }
-    });
-}
-
 function wrapText(context: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, lineHeight: number) {
     const words = text.split(' ');
     let line = '';
@@ -201,60 +192,56 @@ class Media {
         const img = new Image();
         img.crossOrigin = 'anonymous';
         img.src = this.project.image;
-        img.onerror = () => {
-            // Draw background and text even if image fails
-            ctx.fillStyle = '#0a0a0a';
-            ctx.fillRect(0, 0, baseWidth, baseHeight);
 
-            // Draw Content
-            ctx.fillStyle = this.textColor;
-            ctx.font = 'bold 50px sans-serif';
-            ctx.fillText(this.project.title, 40, 580);
-
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-            ctx.font = '24px sans-serif';
-            wrapText(ctx, this.project.description, 40, 640, baseWidth - 80, 35);
-
-            texture.image = canvas;
-            this.program.uniforms.uImageSizes.value = [width, height];
-        };
-        img.onload = () => {
+        const renderCard = (image?: HTMLImageElement) => {
             // Draw background
             ctx.fillStyle = '#0a0a0a';
             ctx.fillRect(0, 0, baseWidth, baseHeight);
 
-            // Draw image (top half) with strict "cover" cropping
             const imgHeight = 500;
-            ctx.save();
-            ctx.beginPath();
-            ctx.rect(0, 0, baseWidth, imgHeight);
-            ctx.clip();
 
-            const targetAspect = baseWidth / imgHeight;
-            const imgAspect = img.naturalWidth / img.naturalHeight;
-            let drawW, drawH, drawX, drawY;
+            if (image) {
+                // Draw image (top half) with strict "cover" cropping
+                ctx.save();
+                ctx.beginPath();
+                ctx.rect(0, 0, baseWidth, imgHeight);
+                ctx.clip();
 
-            if (imgAspect > targetAspect) {
-                drawH = imgHeight;
-                drawW = imgHeight * imgAspect;
-                drawX = (baseWidth - drawW) / 2;
-                drawY = 0;
+                const targetAspect = baseWidth / imgHeight;
+                const imgAspect = image.naturalWidth / image.naturalHeight;
+                let drawW, drawH, drawX, drawY;
+
+                if (imgAspect > targetAspect) {
+                    drawH = imgHeight;
+                    drawW = imgHeight * imgAspect;
+                    drawX = (baseWidth - drawW) / 2;
+                    drawY = 0;
+                } else {
+                    drawW = baseWidth;
+                    drawH = baseWidth / imgAspect;
+                    drawX = 0;
+                    drawY = (imgHeight - drawH) / 2;
+                }
+
+                ctx.drawImage(image, drawX, drawY, drawW, drawH);
+                ctx.restore();
+
+                // Draw overlay gradient
+                const grad = ctx.createLinearGradient(0, 0, 0, imgHeight);
+                grad.addColorStop(0.7, 'rgba(0,0,0,0)');
+                grad.addColorStop(1, 'rgba(10,10,10,1)');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, baseWidth, imgHeight);
             } else {
-                drawW = baseWidth;
-                drawH = baseWidth / imgAspect;
-                drawX = 0;
-                drawY = (imgHeight - drawH) / 2;
+                // Draw a placeholder if image fails
+                ctx.fillStyle = '#1a1a1a';
+                ctx.fillRect(0, 0, baseWidth, imgHeight);
+                ctx.fillStyle = 'rgba(255,255,255,0.2)';
+                ctx.font = 'bold 30px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('Image Load Failed', baseWidth / 2, imgHeight / 2);
+                ctx.textAlign = 'left';
             }
-
-            ctx.drawImage(img, drawX, drawY, drawW, drawH);
-            ctx.restore();
-
-            // Draw overlay gradient
-            const grad = ctx.createLinearGradient(0, 0, 0, imgHeight);
-            grad.addColorStop(0.7, 'rgba(0,0,0,0)');
-            grad.addColorStop(1, 'rgba(10,10,10,1)');
-            ctx.fillStyle = grad;
-            ctx.fillRect(0, 0, baseWidth, imgHeight);
 
             // Draw Content
             ctx.fillStyle = this.textColor;
@@ -307,6 +294,9 @@ class Media {
 
             this.program.uniforms.uImageSizes.value = [width, height];
         };
+
+        img.onload = () => renderCard(img);
+        img.onerror = () => renderCard();
     }
 
     createMesh() {

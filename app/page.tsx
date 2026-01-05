@@ -12,7 +12,7 @@ export default function Home() {
   return (
     <div className="px-5 scroll-smooth bg-black">
       {/* Hero Section with Glitch Background */}
-      <div id="home" className="font-sans min-h-screen flex items-center justify-center px-6 relative overflow-hidden">
+      <div id="home" className="font-sans min-h-screen flex items-center justify-center px-6 pt-24 md:pt-32 relative overflow-hidden">
         {/* Background for Home only */}
         <div className="absolute inset-0 z-0">
           <LetterGlitch

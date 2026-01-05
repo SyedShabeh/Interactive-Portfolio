@@ -4,6 +4,18 @@ import CircularGallery from "./CircularGallery";
 
 const projects = [
     {
+        title: "Chatbot",
+        description: "Interactive creation of high end chatbot using grok 4 api considering the best chatbot ever according to design and functionality both.",
+        tags: [
+            { name: "Next.js", color: "#A855F7" },
+            { name: "TypeScript", color: "#3B82F6" },
+            { name: "Supabase", color: "#22C55E" },
+            { name: "npm", color: "#F97316" } // Orange
+        ],
+        link: "#",
+        image: "https://images.unsplash.com/photo-1531746790731-6c087fecd05a?q=80&w=800&auto=format&fit=crop"
+    },
+    {
         title: "Deal Desk",
         description: "Management of clients, properties, deals and commission in a simple and clean understandable pixel perfect view.",
         tags: [
@@ -25,18 +37,6 @@ const projects = [
         ],
         link: "#",
         image: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=800&auto=format&fit=crop"
-    },
-    {
-        title: "Chatbot",
-        description: "Interactive creation of high end chatbot using grok 4 api considering the best chatbot ever according to design and functionality both.",
-        tags: [
-            { name: "Next.js", color: "#A855F7" },
-            { name: "TypeScript", color: "#3B82F6" },
-            { name: "Supabase", color: "#22C55E" },
-            { name: "npm", color: "#F97316" } // Orange
-        ],
-        link: "#",
-        image: "https://images.unsplash.com/photo-1531746790731-6c087fecd05a?q=80&w=800&auto=format&fit=crop"
     },
     {
         title: "E-commerce platform",
@@ -63,7 +63,7 @@ const ProjectsSection = () => {
 
             <div className="absolute inset-0 top-32">
                 <CircularGallery
-                    key={JSON.stringify(projects)}
+                    key={`gallery-${projects.length}-${projects[0].title}`}
                     items={projects}
                     bend={3}
                     textColor="#ffffff"

@@ -201,6 +201,23 @@ class Media {
         const img = new Image();
         img.crossOrigin = 'anonymous';
         img.src = this.project.image;
+        img.onerror = () => {
+            // Draw background and text even if image fails
+            ctx.fillStyle = '#0a0a0a';
+            ctx.fillRect(0, 0, baseWidth, baseHeight);
+
+            // Draw Content
+            ctx.fillStyle = this.textColor;
+            ctx.font = 'bold 50px sans-serif';
+            ctx.fillText(this.project.title, 40, 580);
+
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+            ctx.font = '24px sans-serif';
+            wrapText(ctx, this.project.description, 40, 640, baseWidth - 80, 35);
+
+            texture.image = canvas;
+            this.program.uniforms.uImageSizes.value = [width, height];
+        };
         img.onload = () => {
             // Draw background
             ctx.fillStyle = '#0a0a0a';

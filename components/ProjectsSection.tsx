@@ -25,7 +25,7 @@ const projects = [
             { name: "pnpm", color: "#EAB308" } // Yellow
         ],
         link: "https://dealdesk.pk",
-        image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop"
+        image: "/dealth.png"
     },
     {
         title: "Interactive Portfolio",
@@ -36,7 +36,7 @@ const projects = [
             { name: "Three.js", color: "#FFFFFF" }
         ],
         link: "https://syedshabeh-dev.vercel.app",
-        image: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=800&auto=format&fit=crop"
+        image: "/portth.png"
     },
     {
         title: "E-commerce platform",
@@ -48,7 +48,7 @@ const projects = [
             { name: "npm", color: "#F97316" }
         ],
         link: "https://shabeh-e-commerce.vercel.app/",
-        image: "https://images.unsplash.com/photo-1472851294608-062f824d29cc?q=80&w=800&auto=format&fit=crop"
+        image: "/ecomerceth.png"
     },
 ];
 

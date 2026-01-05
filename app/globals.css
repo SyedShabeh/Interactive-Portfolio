@@ -11,6 +11,9 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --color-darkgreen: #008f11;
+  --color-neon-green: #00ff00;
+  --shadow-neon: 0 0 20px rgba(0, 255, 0, 0.6);
+  --shadow-neon-strong: 0 0 30px rgba(0, 255, 0, 0.8);
 }
 
 @media (prefers-color-scheme: dark) {

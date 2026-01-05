@@ -24,7 +24,7 @@ const SkillsSection = () => {
         <section id="skills" className="h-screen w-full relative z-10 overflow-hidden bg-black">
             <div className="absolute top-12 left-0 right-0 z-20 pointer-events-none px-6">
                 <div className="max-w-4xl mx-auto">
-                    <h2 className="text-4xl font-bold mb-8 text-darkgreen border-b border-white/10 pb-4 text-center">Skills</h2>
+                    <h2 className="text-4xl font-bold mb-8 text-neon-green border-b border-white/10 pb-4 text-center [text-shadow:0_0_15px_rgba(0,255,0,0.5)]">Skills</h2>
                 </div>
             </div>
 

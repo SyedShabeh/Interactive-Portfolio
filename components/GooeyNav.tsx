@@ -239,7 +239,8 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
             content: "";
             position: absolute;
             inset: 0;
-            background: var(--color-darkgreen);
+            background: var(--color-neon-green);
+            box-shadow: 0 0 20px var(--color-neon-green);
             transform: scale(0);
             opacity: 0;
             z-index: -1;
@@ -334,7 +335,8 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
             position: absolute;
             inset: 0;
             border-radius: 8px;
-            background: var(--color-darkgreen);
+            background: var(--color-neon-green);
+            box-shadow: 0 0 15px var(--color-neon-green);
             opacity: 0;
             transform: scale(0);
             transition: all 0.3s ease;

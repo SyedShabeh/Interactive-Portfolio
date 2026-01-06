@@ -22,6 +22,7 @@ type DomeGalleryProps = {
     imageBorderRadius?: string;
     openedImageBorderRadius?: string;
     grayscale?: boolean;
+    autoRotationSpeed?: number;
 };
 
 type ItemDef = {
@@ -68,7 +69,8 @@ const DEFAULTS = {
     maxVerticalRotationDeg: 5,
     dragSensitivity: 20,
     enlargeTransitionMs: 300,
-    segments: 20
+    segments: 20,
+    autoRotationSpeed: 0.1
 };
 
 const clamp = (v: number, min: number, max: number) => Math.min(Math.max(v, min), max);
@@ -156,7 +158,8 @@ export default function DomeGallery({
     openedImageHeight = '400px',
     imageBorderRadius = '30px',
     openedImageBorderRadius = '30px',
-    grayscale = true
+    grayscale = true,
+    autoRotationSpeed = DEFAULTS.autoRotationSpeed
 }: DomeGalleryProps) {
     const rootRef = useRef<HTMLDivElement>(null);
     const mainRef = useRef<HTMLDivElement>(null);
@@ -184,6 +187,8 @@ export default function DomeGallery({
     const openingRef = useRef(false);
     const openStartedAtRef = useRef(0);
     const lastDragEndAt = useRef(performance.now());
+    const autoRotationRAF = useRef<number | null>(null);
+    const isInteractingRef = useRef(false);
 
     const scrollLockedRef = useRef(false);
     const lockScroll = useCallback(() => {
@@ -295,7 +300,9 @@ export default function DomeGallery({
 
     useEffect(() => {
         applyTransform(rotationRef.current.x, rotationRef.current.y);
-    }, []);
+        startAutoRotation();
+        return () => stopAutoRotation();
+    }, [startAutoRotation, stopAutoRotation]);
 
     const stopInertia = useCallback(() => {
         if (inertiaRAF.current) {
@@ -337,6 +344,27 @@ export default function DomeGallery({
         [dragDampening, maxVerticalRotationDeg, stopInertia]
     );
 
+    const startAutoRotation = useCallback(() => {
+        if (autoRotationSpeed === 0) return;
+        const step = () => {
+            if (!isInteractingRef.current && !inertiaRAF.current && !openingRef.current) {
+                const nextY = wrapAngleSigned(rotationRef.current.y + autoRotationSpeed);
+                rotationRef.current = { ...rotationRef.current, y: nextY };
+                applyTransform(rotationRef.current.x, nextY);
+            }
+            autoRotationRAF.current = requestAnimationFrame(step);
+        };
+        stopAutoRotation();
+        autoRotationRAF.current = requestAnimationFrame(step);
+    }, [autoRotationSpeed]);
+
+    const stopAutoRotation = useCallback(() => {
+        if (autoRotationRAF.current) {
+            cancelAnimationFrame(autoRotationRAF.current);
+            autoRotationRAF.current = null;
+        }
+    }, []);
+
     useGesture(
         {
             onDragStart: ({ event }) => {
@@ -348,6 +376,7 @@ export default function DomeGallery({
                 if (pointerTypeRef.current === 'touch') evt.preventDefault();
                 if (pointerTypeRef.current === 'touch') lockScroll();
                 draggingRef.current = true;
+                isInteractingRef.current = true;
                 cancelTapRef.current = false;
                 movedRef.current = false;
                 startRotRef.current = { ...rotationRef.current };
@@ -384,6 +413,7 @@ export default function DomeGallery({
 
                 if (last) {
                     draggingRef.current = false;
+                    isInteractingRef.current = false;
                     let isTap = false;
 
                     if (startPosRef.current) {

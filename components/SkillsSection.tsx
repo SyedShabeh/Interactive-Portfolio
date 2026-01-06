@@ -35,6 +35,7 @@ const SkillsSection = () => {
                     overlayBlurColor="#000000"
                     openedImageWidth="500px"
                     openedImageHeight="500px"
+                    autoRotationSpeed={0.2}
                 />
             </div>
         </section>

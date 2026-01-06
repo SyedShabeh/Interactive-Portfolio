@@ -32,6 +32,7 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
       height: `${pos.height}px`,
     };
     Object.assign(filterRef.current.style, styles);
+    filterRef.current.classList.add("active");
   };
   const handleClick = (
     e: React.MouseEvent<HTMLAnchorElement>,

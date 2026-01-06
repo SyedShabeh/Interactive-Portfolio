@@ -23,6 +23,7 @@ const LetterGlitch = ({
       colorProgress: number;
     }[]
   >([]);
+  const transitioningIndices = useRef<Set<number>>(new Set());
   const grid = useRef({ columns: 0, rows: 0 });
   const context = useRef<CanvasRenderingContext2D | null>(null);
   const lastGlitchTime = useRef(Date.now());
@@ -111,10 +112,10 @@ const LetterGlitch = ({
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result
       ? {
-          r: parseInt(result[1], 16),
-          g: parseInt(result[2], 16),
-          b: parseInt(result[3], 16),
-        }
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16),
+      }
       : null;
   };
 
@@ -205,29 +206,40 @@ const LetterGlitch = ({
         letters.current[index].colorProgress = 1;
       } else {
         letters.current[index].colorProgress = 0;
+        transitioningIndices.current.add(index);
       }
     }
   };
 
   const handleSmoothTransitions = () => {
-    let needsRedraw = false;
-    letters.current.forEach((letter) => {
-      if (letter.colorProgress < 1) {
-        letter.colorProgress += 0.05;
-        if (letter.colorProgress > 1) letter.colorProgress = 1;
+    if (transitioningIndices.current.size === 0) return;
 
-        const startRgb = hexToRgb(letter.color);
-        const endRgb = hexToRgb(letter.targetColor);
-        if (startRgb && endRgb) {
-          letter.color = interpolateColor(
-            startRgb,
-            endRgb,
-            letter.colorProgress
-          );
-          needsRedraw = true;
-        }
+    let needsRedraw = false;
+    const indicesToRemove: number[] = [];
+
+    transitioningIndices.current.forEach((index) => {
+      const letter = letters.current[index];
+      if (!letter) return;
+
+      letter.colorProgress += 0.05;
+      if (letter.colorProgress >= 1) {
+        letter.colorProgress = 1;
+        indicesToRemove.push(index);
+      }
+
+      const startRgb = hexToRgb(letter.color);
+      const endRgb = hexToRgb(letter.targetColor);
+      if (startRgb && endRgb) {
+        letter.color = interpolateColor(
+          startRgb,
+          endRgb,
+          letter.colorProgress
+        );
+        needsRedraw = true;
       }
     });
+
+    indicesToRemove.forEach((index) => transitioningIndices.current.delete(index));
 
     if (needsRedraw) {
       drawLetters();

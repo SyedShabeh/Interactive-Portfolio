@@ -58,6 +58,8 @@ interface MediaProps {
     bend: number;
     textColor: string;
     borderRadius?: number;
+    texture: Texture;
+    imageSizes: [number, number];
 }
 
 class Media {
@@ -84,6 +86,8 @@ class Media {
     speed: number = 0;
     isBefore: boolean = false;
     isAfter: boolean = false;
+    texture: Texture;
+    imageSizes: [number, number];
 
     constructor({
         geometry,
@@ -98,6 +102,8 @@ class Media {
         bend,
         textColor,
         borderRadius = 0,
+        texture,
+        imageSizes
     }: MediaProps) {
         this.geometry = geometry;
         this.gl = gl;
@@ -111,16 +117,14 @@ class Media {
         this.bend = bend;
         this.textColor = textColor;
         this.borderRadius = borderRadius;
+        this.texture = texture;
+        this.imageSizes = imageSizes;
         this.createShader();
         this.createMesh();
         this.onResize();
     }
 
     createShader() {
-        const texture = new Texture(this.gl, {
-            generateMipmaps: true
-        });
-
         this.program = new Program(this.gl, {
             depthTest: false,
             depthWrite: false,
@@ -162,141 +166,15 @@ class Media {
         }
       `,
             uniforms: {
-                tMap: { value: texture },
+                tMap: { value: this.texture },
                 uPlaneSizes: { value: [0, 0] },
-                uImageSizes: { value: [0, 0] },
+                uImageSizes: { value: this.imageSizes },
                 uSpeed: { value: 0 },
                 uTime: { value: 100 * Math.random() },
                 uBorderRadius: { value: this.borderRadius }
             },
             transparent: true
         });
-
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return;
-
-        const baseWidth = 800;
-        const baseHeight = 1000;
-        const resolutionScale = 6; // 6x resolution for extreme sharpness
-        const width = baseWidth * resolutionScale;
-        const height = baseHeight * resolutionScale;
-        canvas.width = width;
-        canvas.height = height;
-
-        // Enable high-quality image smoothing
-        ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = 'high';
-        ctx.scale(resolutionScale, resolutionScale);
-
-        const img = new Image();
-        img.crossOrigin = 'anonymous';
-        img.src = this.project.image;
-
-        const renderCard = (image?: HTMLImageElement) => {
-            // Draw background
-            ctx.fillStyle = '#0a0a0a';
-            ctx.fillRect(0, 0, baseWidth, baseHeight);
-
-            const imgHeight = 500;
-
-            if (image) {
-                // Draw image (top half) with strict "cover" cropping
-                ctx.save();
-                ctx.beginPath();
-                ctx.rect(0, 0, baseWidth, imgHeight);
-                ctx.clip();
-
-                const targetAspect = baseWidth / imgHeight;
-                const imgAspect = image.naturalWidth / image.naturalHeight;
-                let drawW, drawH, drawX, drawY;
-
-                if (imgAspect > targetAspect) {
-                    drawH = imgHeight;
-                    drawW = imgHeight * imgAspect;
-                    drawX = (baseWidth - drawW) / 2;
-                    drawY = 0;
-                } else {
-                    drawW = baseWidth;
-                    drawH = baseWidth / imgAspect;
-                    drawX = 0;
-                    drawY = (imgHeight - drawH) / 2;
-                }
-
-                ctx.drawImage(image, drawX, drawY, drawW, drawH);
-                ctx.restore();
-
-                // Draw overlay gradient
-                const grad = ctx.createLinearGradient(0, 0, 0, imgHeight);
-                grad.addColorStop(0.7, 'rgba(0,0,0,0)');
-                grad.addColorStop(1, 'rgba(10,10,10,1)');
-                ctx.fillStyle = grad;
-                ctx.fillRect(0, 0, baseWidth, imgHeight);
-            } else {
-                // Draw a placeholder if image fails
-                ctx.fillStyle = '#1a1a1a';
-                ctx.fillRect(0, 0, baseWidth, imgHeight);
-                ctx.fillStyle = 'rgba(255,255,255,0.2)';
-                ctx.font = 'bold 30px sans-serif';
-                ctx.textAlign = 'center';
-                ctx.fillText('Image Load Failed', baseWidth / 2, imgHeight / 2);
-                ctx.textAlign = 'left';
-            }
-
-            // Draw Content
-            ctx.fillStyle = this.textColor;
-            ctx.font = 'bold 50px sans-serif';
-            ctx.fillText(this.project.title, 40, imgHeight + 80);
-
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-            ctx.font = '24px sans-serif';
-            const nextY = wrapText(ctx, this.project.description, 40, imgHeight + 140, baseWidth - 80, 35);
-
-            // Draw Tags
-            let tagX = 40;
-            const tagY = nextY + 20;
-            ctx.font = 'bold 18px sans-serif';
-            this.project.tags.forEach(tag => {
-                const tagText = tag.name.toUpperCase();
-                const metrics = ctx.measureText(tagText);
-                const tagW = metrics.width + 20;
-
-                ctx.fillStyle = `${tag.color}1a`; // 10% opacity for background
-                ctx.strokeStyle = `${tag.color}33`; // 20% opacity for border
-                ctx.beginPath();
-                ctx.roundRect(tagX, tagY, tagW, 30, 5);
-                ctx.fill();
-                ctx.stroke();
-
-                ctx.fillStyle = tag.color;
-                ctx.fillText(tagText, tagX + 10, tagY + 22);
-                tagX += tagW + 10;
-            });
-
-            // Draw "View Project"
-            ctx.fillStyle = 'white';
-            ctx.font = 'bold 22px sans-serif';
-            ctx.fillText('View Project →', 40, baseHeight - 60);
-
-            texture.image = canvas;
-
-            // Explicitly set texture filtering for maximum clarity
-            this.gl.bindTexture(this.gl.TEXTURE_2D, texture.texture);
-            this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR_MIPMAP_LINEAR);
-            this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR);
-
-            // Enable anisotropy for sharper slanted viewing
-            const ext = this.gl.getExtension('EXT_texture_filter_anisotropic');
-            if (ext) {
-                const max = this.gl.getParameter(ext.MAX_TEXTURE_MAX_ANISOTROPY_EXT);
-                this.gl.texParameterf(this.gl.TEXTURE_2D, ext.TEXTURE_MAX_ANISOTROPY_EXT, max);
-            }
-
-            this.program.uniforms.uImageSizes.value = [width, height];
-        };
-
-        img.onload = () => renderCard(img);
-        img.onerror = () => renderCard();
     }
 
     createMesh() {
@@ -394,6 +272,7 @@ class App {
     screen!: { width: number; height: number };
     viewport!: { width: number; height: number };
     raf: number = 0;
+    textures: Map<string, { texture: Texture; width: number; height: number }> = new Map();
 
     boundOnResize!: () => void;
     boundOnWheel!: (e: Event) => void;
@@ -452,8 +331,8 @@ class App {
 
     createGeometry() {
         this.planeGeometry = new Plane(this.gl, {
-            heightSegments: 50,
-            widthSegments: 100
+            heightSegments: 16,
+            widthSegments: 32
         });
     }
 
@@ -466,6 +345,119 @@ class App {
         // Duplicate items for infinite loop
         const galleryItems = items.concat(items);
         this.medias = galleryItems.map((data, index) => {
+            const textureKey = `${data.image}-${textColor}-${borderRadius}`;
+            let textureData = this.textures.get(textureKey);
+
+            if (!textureData) {
+                const texture = new Texture(this.gl, { generateMipmaps: true });
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const baseWidth = 800;
+                const baseHeight = 1000;
+                const resolutionScale = 2;
+                const width = baseWidth * resolutionScale;
+                const height = baseHeight * resolutionScale;
+
+                if (ctx) {
+                    canvas.width = width;
+                    canvas.height = height;
+                    ctx.imageSmoothingEnabled = true;
+                    ctx.imageSmoothingQuality = 'high';
+                    ctx.scale(resolutionScale, resolutionScale);
+
+                    const img = new Image();
+                    img.crossOrigin = 'anonymous';
+                    img.src = data.image;
+
+                    const renderCard = (image?: HTMLImageElement) => {
+                        ctx.fillStyle = '#0a0a0a';
+                        ctx.fillRect(0, 0, baseWidth, baseHeight);
+                        const imgHeight = 500;
+
+                        if (image) {
+                            ctx.save();
+                            ctx.beginPath();
+                            ctx.rect(0, 0, baseWidth, imgHeight);
+                            ctx.clip();
+                            const targetAspect = baseWidth / imgHeight;
+                            const imgAspect = image.naturalWidth / image.naturalHeight;
+                            let drawW, drawH, drawX, drawY;
+                            if (imgAspect > targetAspect) {
+                                drawH = imgHeight;
+                                drawW = imgHeight * imgAspect;
+                                drawX = (baseWidth - drawW) / 2;
+                                drawY = 0;
+                            } else {
+                                drawW = baseWidth;
+                                drawH = baseWidth / imgAspect;
+                                drawX = 0;
+                                drawY = (imgHeight - drawH) / 2;
+                            }
+                            ctx.drawImage(image, drawX, drawY, drawW, drawH);
+                            ctx.restore();
+                            const grad = ctx.createLinearGradient(0, 0, 0, imgHeight);
+                            grad.addColorStop(0.7, 'rgba(0,0,0,0)');
+                            grad.addColorStop(1, 'rgba(10,10,10,1)');
+                            ctx.fillStyle = grad;
+                            ctx.fillRect(0, 0, baseWidth, imgHeight);
+                        } else {
+                            ctx.fillStyle = '#1a1a1a';
+                            ctx.fillRect(0, 0, baseWidth, imgHeight);
+                            ctx.fillStyle = 'rgba(255,255,255,0.2)';
+                            ctx.font = 'bold 30px sans-serif';
+                            ctx.textAlign = 'center';
+                            ctx.fillText('Image Load Failed', baseWidth / 2, imgHeight / 2);
+                            ctx.textAlign = 'left';
+                        }
+
+                        ctx.fillStyle = textColor;
+                        ctx.font = 'bold 50px sans-serif';
+                        ctx.fillText(data.title, 40, imgHeight + 80);
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                        ctx.font = '24px sans-serif';
+                        const nextY = wrapText(ctx, data.description, 40, imgHeight + 140, baseWidth - 80, 35);
+
+                        let tagX = 40;
+                        const tagY = nextY + 20;
+                        ctx.font = 'bold 18px sans-serif';
+                        data.tags.forEach(tag => {
+                            const tagText = tag.name.toUpperCase();
+                            const metrics = ctx.measureText(tagText);
+                            const tagW = metrics.width + 20;
+                            ctx.fillStyle = `${tag.color}1a`;
+                            ctx.strokeStyle = `${tag.color}33`;
+                            ctx.beginPath();
+                            ctx.roundRect(tagX, tagY, tagW, 30, 5);
+                            ctx.fill();
+                            ctx.stroke();
+                            ctx.fillStyle = tag.color;
+                            ctx.fillText(tagText, tagX + 10, tagY + 22);
+                            tagX += tagW + 10;
+                        });
+
+                        ctx.fillStyle = 'white';
+                        ctx.font = 'bold 22px sans-serif';
+                        ctx.fillText('View Project →', 40, baseHeight - 60);
+
+                        texture.image = canvas;
+                        this.gl.bindTexture(this.gl.TEXTURE_2D, texture.texture);
+                        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR_MIPMAP_LINEAR);
+                        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR);
+                        const ext = this.gl.getExtension('EXT_texture_filter_anisotropic');
+                        if (ext) {
+                            const max = this.gl.getParameter(ext.MAX_TEXTURE_MAX_ANISOTROPY_EXT);
+                            this.gl.texParameterf(this.gl.TEXTURE_2D, ext.TEXTURE_MAX_ANISOTROPY_EXT, max);
+                        }
+                    };
+
+                    img.onload = () => renderCard(img);
+                    img.onerror = () => renderCard();
+                }
+
+                textureData = { texture, width, height };
+                this.textures.set(textureKey, textureData);
+            }
+
             return new Media({
                 geometry: this.planeGeometry,
                 gl: this.gl,
@@ -478,7 +470,9 @@ class App {
                 viewport: this.viewport,
                 bend,
                 textColor,
-                borderRadius
+                borderRadius,
+                texture: textureData.texture,
+                imageSizes: [textureData.width, textureData.height]
             });
         });
     }
@@ -622,6 +616,22 @@ class App {
 
         window.removeEventListener('mousewheel', this.boundOnWheel);
         window.removeEventListener('wheel', this.boundOnWheel);
+
+        // Dispose of WebGL resources
+        this.textures.forEach(data => {
+            if (data.texture) data.texture.remove();
+        });
+        this.textures.clear();
+
+        this.medias.forEach(media => {
+            if (media.program) {
+                media.program.remove();
+            }
+        });
+
+        if (this.planeGeometry) {
+            this.planeGeometry.remove();
+        }
 
         if (this.renderer && this.renderer.gl && this.renderer.gl.canvas.parentNode) {
             this.renderer.gl.canvas.parentNode.removeChild(this.renderer.gl.canvas as HTMLCanvasElement);

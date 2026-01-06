@@ -190,6 +190,10 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
     ] as HTMLElement;
     if (activeLi) {
       updateEffectPosition(activeLi);
+      // Trigger particles on initial load or scroll-based changes
+      if (filterRef.current && !isScrollingRef.current) {
+        makeParticles(filterRef.current);
+      }
     }
 
     const handleNavScroll = () => {

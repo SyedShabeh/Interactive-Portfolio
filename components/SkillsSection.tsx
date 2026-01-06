@@ -20,6 +20,15 @@ const skillImages = [
 ];
 
 const SkillsSection = () => {
+    const [isMobile, setIsMobile] = React.useState(false);
+
+    React.useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
     return (
         <section id="skills" className="h-screen w-full relative z-10 overflow-hidden bg-black">
             <div className="absolute top-12 left-0 right-0 z-20 pointer-events-none px-6">
@@ -33,9 +42,11 @@ const SkillsSection = () => {
                     images={skillImages}
                     grayscale={false}
                     overlayBlurColor="#000000"
-                    openedImageWidth="500px"
-                    openedImageHeight="500px"
+                    openedImageWidth={isMobile ? "250px" : "500px"}
+                    openedImageHeight={isMobile ? "250px" : "500px"}
                     autoRotationSpeed={0.2}
+                    minRadius={isMobile ? 300 : 600}
+                    fit={isMobile ? 0.4 : 0.5}
                 />
             </div>
         </section>

@@ -619,7 +619,9 @@ class App {
 
         // Dispose of WebGL resources
         this.textures.forEach(data => {
-            if (data.texture) data.texture.remove();
+            if (data.texture && data.texture.texture) {
+                this.gl.deleteTexture(data.texture.texture);
+            }
         });
         this.textures.clear();
 

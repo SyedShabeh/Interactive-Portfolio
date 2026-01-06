@@ -53,12 +53,12 @@ const ContactSection = () => {
                                 <p className="text-sm text-white/40 mb-4">Social Connect</p>
                                 <div className="grid grid-cols-4 sm:grid-cols-8 gap-3">
                                     {[
-                                        { icon: Facebook, href: "#", label: "Facebook" },
+                                        { icon: Facebook, href: "https://www.facebook.com/SyedShabehUlHassan", label: "Facebook" },
                                         { icon: Linkedin, href: "https://www.linkedin.com/in/syed-shabeh-ul-hassan-naqvi-46868726a", label: "LinkedIn" },
-                                        { icon: Twitter, href: "#", label: "Twitter" },
-                                        { icon: Instagram, href: "#", label: "Instagram" },
-                                        { icon: FaDev, href: "#", label: "Dev.to" },
-                                        { icon: TbBrandTiktok, href: "#", label: "TikTok" },
+                                        { icon: Twitter, href: "https://twitter.com/s_shabeh", label: "Twitter" },
+                                        { icon: Instagram, href: "https://www.instagram.com/s_shabeh7", label: "Instagram" },
+                                        { icon: FaDev, href: "https://dev.to/s_shabeh", label: "Dev.to" },
+                                        { icon: TbBrandTiktok, href: "https://www.tiktok.com/@s_shabeh7", label: "TikTok" },
                                         { icon: TbBrandFiverr, href: "https://www.fiverr.com/syedshabeh", label: "Fiverr" },
                                         { icon: FaUpwork, href: "https://www.upwork.com/freelancers/syedshabeh", label: "Upwork" },
                                     ].map((social, i) => (

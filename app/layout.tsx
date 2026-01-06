@@ -39,13 +39,7 @@ export default function RootLayout({
         <div className="fixed top-0 left-0 w-full flex justify-center z-50 py-4 backdrop-blur-md bg-black/20 border-b border-white/5">
           <GooeyNav
             items={items}
-            particleCount={15}
-            particleDistances={[90, 10]}
-            particleR={100}
             initialActiveIndex={0}
-            animationTime={600}
-            timeVariance={300}
-            colors={[1, 2, 3, 1, 2, 3, 1, 4]}
           />
         </div>
         {children}

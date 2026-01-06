@@ -298,6 +298,27 @@ export default function DomeGallery({
         openedImageHeight
     ]);
 
+    const stopAutoRotation = useCallback(() => {
+        if (autoRotationRAF.current) {
+            cancelAnimationFrame(autoRotationRAF.current);
+            autoRotationRAF.current = null;
+        }
+    }, []);
+
+    const startAutoRotation = useCallback(() => {
+        if (autoRotationSpeed === 0) return;
+        const step = () => {
+            if (!isInteractingRef.current && !inertiaRAF.current && !openingRef.current) {
+                const nextY = wrapAngleSigned(rotationRef.current.y + autoRotationSpeed);
+                rotationRef.current = { ...rotationRef.current, y: nextY };
+                applyTransform(rotationRef.current.x, nextY);
+            }
+            autoRotationRAF.current = requestAnimationFrame(step);
+        };
+        stopAutoRotation();
+        autoRotationRAF.current = requestAnimationFrame(step);
+    }, [autoRotationSpeed, stopAutoRotation]);
+
     useEffect(() => {
         applyTransform(rotationRef.current.x, rotationRef.current.y);
         startAutoRotation();
@@ -344,26 +365,6 @@ export default function DomeGallery({
         [dragDampening, maxVerticalRotationDeg, stopInertia]
     );
 
-    const startAutoRotation = useCallback(() => {
-        if (autoRotationSpeed === 0) return;
-        const step = () => {
-            if (!isInteractingRef.current && !inertiaRAF.current && !openingRef.current) {
-                const nextY = wrapAngleSigned(rotationRef.current.y + autoRotationSpeed);
-                rotationRef.current = { ...rotationRef.current, y: nextY };
-                applyTransform(rotationRef.current.x, nextY);
-            }
-            autoRotationRAF.current = requestAnimationFrame(step);
-        };
-        stopAutoRotation();
-        autoRotationRAF.current = requestAnimationFrame(step);
-    }, [autoRotationSpeed]);
-
-    const stopAutoRotation = useCallback(() => {
-        if (autoRotationRAF.current) {
-            cancelAnimationFrame(autoRotationRAF.current);
-            autoRotationRAF.current = null;
-        }
-    }, []);
 
     useGesture(
         {

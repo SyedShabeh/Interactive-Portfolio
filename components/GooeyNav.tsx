@@ -186,6 +186,21 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
       updateEffectPosition(activeLi);
       textRef.current?.classList.add("active");
     }
+
+    const handleNavScroll = () => {
+      const currentActiveLi = navRef.current?.querySelectorAll("li")[
+        activeIndex
+      ] as HTMLElement;
+      if (currentActiveLi) {
+        updateEffectPosition(currentActiveLi);
+      }
+    };
+
+    const navElement = navRef.current?.parentElement;
+    if (navElement) {
+      navElement.addEventListener('scroll', handleNavScroll);
+    }
+
     const resizeObserver = new ResizeObserver(() => {
       const currentActiveLi = navRef.current?.querySelectorAll("li")[
         activeIndex
@@ -198,6 +213,9 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
     return () => {
       resizeObserver.disconnect();
       window.removeEventListener('scroll', handleScroll);
+      if (navElement) {
+        navElement.removeEventListener('scroll', handleNavScroll);
+      }
     };
   }, [activeIndex, items]);
 
@@ -346,16 +364,23 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
             opacity: 1;
             transform: scale(1);
           }
+          .no-scrollbar::-webkit-scrollbar {
+            display: none;
+          }
+          .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+          }
         `}
       </style>
-      <div className="relative" ref={containerRef}>
+      <div className="relative max-w-full overflow-hidden" ref={containerRef}>
         <nav
-          className="flex relative"
+          className="flex relative max-w-full overflow-x-auto no-scrollbar"
           style={{ transform: "translate3d(0,0,0.01px)" }}
         >
           <ul
             ref={navRef}
-            className="flex gap-4 list-none p-0 px-4 m-0 relative z-[3]"
+            className="flex gap-2 sm:gap-4 list-none p-0 px-4 m-0 relative z-[3] whitespace-nowrap"
             style={{
               color: "white",
               textShadow: "0 1px 1px hsl(205deg 30% 10% / 0.2)",
@@ -364,14 +389,14 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
             {items.map((item, index) => (
               <li
                 key={index}
-                className={`relative cursor-pointer transition-[background-color_color_box-shadow] duration-300 ease shadow-[0_0_0.5px_1.5px_transparent] text-white ${activeIndex === index ? "active" : ""
+                className={`relative cursor-pointer transition-[background-color_color_box-shadow] duration-300 ease shadow-[0_0_0.5px_1.5px_transparent] text-white text-sm sm:text-base ${activeIndex === index ? "active" : ""
                   }`}
               >
                 <a
                   href={item.href}
                   onClick={(e) => handleClick(e, index)}
                   onKeyDown={(e) => handleKeyDown(e, index)}
-                  className="outline-none py-[5px] px-[10px] inline-block"
+                  className="outline-none py-[5px] px-[8px] sm:px-[10px] inline-block"
                 >
                   {item.label}
                 </a>

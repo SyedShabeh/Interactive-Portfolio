@@ -31,6 +31,7 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
   const navRef = useRef<HTMLUListElement>(null);
   const filterRef = useRef<HTMLSpanElement>(null);
   const [activeIndex, setActiveIndex] = useState<number>(initialActiveIndex);
+  const isScrollingRef = useRef(false);
 
   const noise = (n = 1) => n / 2 - Math.random() * n;
   const getXY = (
@@ -115,7 +116,14 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
       const targetId = href.replace('#', '');
       const element = document.getElementById(targetId);
       if (element) {
+        isScrollingRef.current = true;
+        setActiveIndex(index);
         element.scrollIntoView({ behavior: 'smooth' });
+
+        // Re-enable scroll spy after smooth scroll finishes
+        setTimeout(() => {
+          isScrollingRef.current = false;
+        }, 1000);
       }
     }
 
@@ -151,25 +159,31 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
   useEffect(() => {
     if (!navRef.current || !containerRef.current) return;
 
-    const handleScroll = () => {
-      const sectionIds = items.map(item => item.href.replace('#', ''));
-      const scrollPosition = window.scrollY + window.innerHeight * 0.3;
-
-      for (let i = sectionIds.length - 1; i >= 0; i--) {
-        const element = document.getElementById(sectionIds[i]);
-        if (element) {
-          const offsetTop = element.getBoundingClientRect().top + window.scrollY;
-          if (scrollPosition >= offsetTop) {
-            if (activeIndex !== i) {
-              setActiveIndex(i);
-            }
-            break;
-          }
-        }
-      }
+    // Intersection Observer for more reliable scroll spying
+    const observerOptions = {
+      root: null,
+      rootMargin: '-20% 0px -70% 0px', // Trigger when section is in the upper part of the screen
+      threshold: 0
     };
 
-    window.addEventListener('scroll', handleScroll);
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      if (isScrollingRef.current) return;
+
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const index = items.findIndex(item => item.href === `#${entry.target.id}`);
+          if (index !== -1 && activeIndex !== index) {
+            setActiveIndex(index);
+          }
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+    items.forEach(item => {
+      const element = document.getElementById(item.href.replace('#', ''));
+      if (element) observer.observe(element);
+    });
 
     const activeLi = navRef.current.querySelectorAll("li")[
       activeIndex
@@ -201,9 +215,10 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
       }
     });
     resizeObserver.observe(containerRef.current);
+
     return () => {
+      observer.disconnect();
       resizeObserver.disconnect();
-      window.removeEventListener('scroll', handleScroll);
       if (navElement) {
         navElement.removeEventListener('scroll', handleNavScroll);
       }
@@ -328,10 +343,6 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
           li.active {
             color: white;
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-          }
-          li.active::after {
-            opacity: 1;
-            transform: scale(1);
           }
           li::after {
             content: "";

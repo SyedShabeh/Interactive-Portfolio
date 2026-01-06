@@ -30,7 +30,6 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLUListElement>(null);
   const filterRef = useRef<HTMLSpanElement>(null);
-  const textRef = useRef<HTMLSpanElement>(null);
   const [activeIndex, setActiveIndex] = useState<number>(initialActiveIndex);
 
   const noise = (n = 1) => n / 2 - Math.random() * n;
@@ -95,7 +94,7 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
     }
   };
   const updateEffectPosition = (element: HTMLElement) => {
-    if (!containerRef.current || !filterRef.current || !textRef.current) return;
+    if (!containerRef.current || !filterRef.current) return;
     const containerRect = containerRef.current.getBoundingClientRect();
     const pos = element.getBoundingClientRect();
     const styles = {
@@ -105,8 +104,6 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
       height: `${pos.height}px`,
     };
     Object.assign(filterRef.current.style, styles);
-    Object.assign(textRef.current.style, styles);
-    textRef.current.innerText = element.innerText;
   };
   const handleClick = (
     e: React.MouseEvent<HTMLAnchorElement>,
@@ -130,11 +127,6 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
     if (filterRef.current) {
       const particles = filterRef.current.querySelectorAll(".particle");
       particles.forEach((p) => filterRef.current!.removeChild(p));
-    }
-    if (textRef.current) {
-      textRef.current.classList.remove("active");
-      void textRef.current.offsetWidth;
-      textRef.current.classList.add("active");
     }
     if (filterRef.current) {
       makeParticles(filterRef.current);
@@ -184,7 +176,6 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
     ] as HTMLElement;
     if (activeLi) {
       updateEffectPosition(activeLi);
-      textRef.current?.classList.add("active");
     }
 
     const handleNavScroll = () => {
@@ -234,13 +225,7 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
             display: grid;
             place-items: center;
             z-index: 1;
-          }
-          .effect.text {
-            color: white;
-            transition: color 0.3s ease;
-          }
-          .effect.text.active {
-            color: white;
+            transition: all 0.6s var(--linear-ease);
           }
           .effect.filter {
             filter: blur(7px) contrast(100) blur(0);
@@ -405,7 +390,6 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
           </ul>
         </nav>
         <span className="effect filter" ref={filterRef} />
-        <span className="effect text" ref={textRef} />
       </div>
     </>
   );

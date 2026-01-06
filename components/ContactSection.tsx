@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Mail, Phone, Linkedin, Send } from "lucide-react";
+import { Mail, Phone, Linkedin, Send, ExternalLink } from "lucide-react";
 
 const ContactSection = () => {
     return (
@@ -55,6 +55,36 @@ const ContactSection = () => {
                                 <div>
                                     <p className="text-sm text-white/40">LinkedIn</p>
                                     <p className="text-lg font-medium">Syed Shabeh-ul-Hassan Naqvi</p>
+                                </div>
+                            </a>
+
+                            <a
+                                href="https://www.fiverr.com/syedshabeh"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-4 text-white/70 hover:text-white transition-colors group"
+                            >
+                                <div className="p-3 bg-white/5 rounded-lg group-hover:bg-white/10 transition-colors">
+                                    <ExternalLink className="w-6 h-6" />
+                                </div>
+                                <div>
+                                    <p className="text-sm text-white/40">Fiverr</p>
+                                    <p className="text-lg font-medium">syedshabeh</p>
+                                </div>
+                            </a>
+
+                            <a
+                                href="https://www.upwork.com/freelancers/syedshabeh"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-4 text-white/70 hover:text-white transition-colors group"
+                            >
+                                <div className="p-3 bg-white/5 rounded-lg group-hover:bg-white/10 transition-colors">
+                                    <ExternalLink className="w-6 h-6" />
+                                </div>
+                                <div>
+                                    <p className="text-sm text-white/40">Upwork</p>
+                                    <p className="text-lg font-medium">Syed Shabeh</p>
                                 </div>
                             </a>
                         </div>

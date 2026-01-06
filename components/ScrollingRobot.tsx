@@ -21,45 +21,53 @@ const ScrollingRobot = () => {
             ease: "power1.inOut",
         });
 
-        // Scroll-based positioning
-        const sections = [
-            { id: "#home", x: "-20%", y: "20%", rotation: 0, opacity: 0 },
-            { id: "#about", x: "10%", y: "20%", rotation: 15, opacity: 1 },
-            { id: "#skills", x: "85%", y: "30%", rotation: -15, opacity: 1 },
-            { id: "#projects", x: "10%", y: "50%", rotation: 10, opacity: 1 },
-            { id: "#contact", x: "85%", y: "70%", rotation: -10, opacity: 1 },
-        ];
+        const mm = gsap.matchMedia();
 
-        sections.forEach((section) => {
-            ScrollTrigger.create({
-                trigger: section.id,
-                start: "top center",
-                end: "bottom center",
-                onEnter: () => {
-                    gsap.to(robotRef.current, {
-                        left: section.x,
-                        top: section.y,
-                        rotation: section.rotation,
-                        opacity: section.opacity,
-                        duration: 1.5,
-                        ease: "power2.inOut",
-                    });
-                },
-                onEnterBack: () => {
-                    gsap.to(robotRef.current, {
-                        left: section.x,
-                        top: section.y,
-                        rotation: section.rotation,
-                        opacity: section.opacity,
-                        duration: 1.5,
-                        ease: "power2.inOut",
-                    });
-                },
+        mm.add({
+            isMobile: "(max-width: 768px)",
+            isDesktop: "(min-width: 769px)"
+        }, (context) => {
+            const { isMobile } = context.conditions as { isMobile: boolean };
+
+            const sections = [
+                { id: "#home", x: isMobile ? "-30%" : "-20%", y: "20%", rotation: 0, opacity: 0 },
+                { id: "#about", x: isMobile ? "5%" : "10%", y: "20%", rotation: 15, opacity: 1 },
+                { id: "#skills", x: isMobile ? "60%" : "80%", y: "30%", rotation: -15, opacity: 1 },
+                { id: "#projects", x: isMobile ? "5%" : "10%", y: "50%", rotation: 10, opacity: 1 },
+                { id: "#contact", x: isMobile ? "60%" : "80%", y: "70%", rotation: -10, opacity: 1 },
+            ];
+
+            sections.forEach((section) => {
+                ScrollTrigger.create({
+                    trigger: section.id,
+                    start: "top center",
+                    end: "bottom center",
+                    onEnter: () => {
+                        gsap.to(robotRef.current, {
+                            left: section.x,
+                            top: section.y,
+                            rotation: section.rotation,
+                            opacity: section.opacity,
+                            duration: 1.5,
+                            ease: "power2.inOut",
+                        });
+                    },
+                    onEnterBack: () => {
+                        gsap.to(robotRef.current, {
+                            left: section.x,
+                            top: section.y,
+                            rotation: section.rotation,
+                            opacity: section.opacity,
+                            duration: 1.5,
+                            ease: "power2.inOut",
+                        });
+                    },
+                });
             });
         });
 
         return () => {
-            ScrollTrigger.getAll().forEach((t) => t.kill());
+            mm.revert();
         };
     }, []);
 

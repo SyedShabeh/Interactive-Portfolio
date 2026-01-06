@@ -1,6 +1,18 @@
 "use client";
 import React from "react";
-import { Mail, Phone, Linkedin, Send, ExternalLink } from "lucide-react";
+import { Mail, Phone, Linkedin, Send } from "lucide-react";
+
+const FiverrIcon = ({ className }: { className?: string }) => (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} xmlns="http://www.w3.org/2000/svg">
+        <path d="M17.107 6.673c-1.243 0-1.809.75-1.809 1.502v1.435h1.719v1.933h-1.719V18h-2.103v-6.457h-1.164V9.61h1.164V8.175c0-2.122 1.361-3.426 3.505-3.426 1.243 0 1.886.225 1.886.225l-.599 2.026s-.578-.327-1.38-.327zM6.422 9.61h2.103V18H6.422V9.61zM7.474 4.5c.728 0 1.318.59 1.318 1.318 0 .728-.59 1.318-1.318 1.318-.728 0-1.318-.59-1.318-1.318 0-.728.59-1.318 1.318-1.318z" />
+    </svg>
+);
+
+const UpworkIcon = ({ className }: { className?: string }) => (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} xmlns="http://www.w3.org/2000/svg">
+        <path d="M18.561 3.311c-2.203 0-3.986 1.782-3.986 3.986v4.305c-1.102-1.445-1.983-3.116-2.536-4.714H9.573v6.495c0 1.059-.858 1.917-1.917 1.917-1.058 0-1.917-.858-1.917-1.917V3.311H3.274v6.495c0 2.398 1.944 4.341 4.342 4.341 2.398 0 4.341-1.943 4.341-4.341V9.24c.551 1.444 1.41 2.97 2.535 4.305l-1.505 7.144h2.466l1.12-5.336c.634.44 1.356.662 2.126.662 2.203 0 3.986-1.783 3.986-3.986V7.297c0-2.204-1.783-3.986-3.986-3.986z" />
+    </svg>
+);
 
 const ContactSection = () => {
     return (
@@ -65,7 +77,7 @@ const ContactSection = () => {
                                 className="flex items-center gap-4 text-white/70 hover:text-white transition-colors group"
                             >
                                 <div className="p-3 bg-white/5 rounded-lg group-hover:bg-white/10 transition-colors">
-                                    <ExternalLink className="w-6 h-6" />
+                                    <FiverrIcon className="w-6 h-6" />
                                 </div>
                                 <div>
                                     <p className="text-sm text-white/40">Fiverr</p>
@@ -80,7 +92,7 @@ const ContactSection = () => {
                                 className="flex items-center gap-4 text-white/70 hover:text-white transition-colors group"
                             >
                                 <div className="p-3 bg-white/5 rounded-lg group-hover:bg-white/10 transition-colors">
-                                    <ExternalLink className="w-6 h-6" />
+                                    <UpworkIcon className="w-6 h-6" />
                                 </div>
                                 <div>
                                     <p className="text-sm text-white/40">Upwork</p>

@@ -53,7 +53,7 @@ const ContactSection = () => {
                                 <p className="text-sm text-white/40 mb-4">Social Connect</p>
                                 <div className="grid grid-cols-4 sm:grid-cols-8 gap-3">
                                     {[
-                                        { icon: Facebook, href: "https://www.facebook.com/SyedShabehUlHassan", label: "Facebook" },
+                                        { icon: Facebook, href: "https://www.facebook.com/profile.php?id=100008838660203", label: "Facebook" },
                                         { icon: Linkedin, href: "https://www.linkedin.com/in/syed-shabeh-ul-hassan-naqvi-46868726a", label: "LinkedIn" },
                                         { icon: Twitter, href: "https://twitter.com/s_shabeh", label: "Twitter" },
                                         { icon: Instagram, href: "https://www.instagram.com/s_shabeh7", label: "Instagram" },
